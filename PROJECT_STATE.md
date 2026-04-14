@@ -4,9 +4,9 @@
 adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
-Repository bootstrap and governance anchoring are complete through CP-001.
-The repository is now operating under a checkpoint-driven workflow.
-CP-002 is defined and pending execution.
+Repository bootstrap, governance anchoring, and repository execution-surface bootstrap are complete through CP-002.
+The repository is operating under a checkpoint-driven workflow with documented local bootstrap guidance.
+The next eligible work is to define CP-003 without starting implementation early.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -16,9 +16,9 @@ The following bootstrap files are assumed to exist and remain authoritative:
 - docs/bootstrap/03_OWNER_PROJECT_MAP.md
 
 ## CURRENT_OBJECTIVE
-Preserve the repository as a strict checkpoint-driven project.
-Execute the bounded checkpoint for repository execution surface and development environment bootstrap.
-No product implementation should begin outside an approved checkpoint.
+Preserve the repository bootstrap baseline created by CP-002.
+Prepare the next bounded checkpoint for server-side skeleton and configuration baseline.
+No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
 - Git repository initialized
@@ -27,16 +27,17 @@ No product implementation should begin outside an approved checkpoint.
 - Initial commit pushed
 - Global project state file established
 - First checkpoint file finalized
-- Second checkpoint file defined
+- Second checkpoint executed and finalized
 - README aligned to the checkpoint workflow
-
-## WHAT_DOES_NOT_EXIST_YET
 - Repository execution surface document
 - Development environment bootstrap document
-- Root environment and editor baseline files
+- Root editor and ignore baseline files
+- Root example environment file
 - Local bootstrap helper script
-- Environment setup checkpoint
-- Server skeleton checkpoint
+
+## WHAT_DOES_NOT_EXIST_YET
+- Third checkpoint file for server-side skeleton and configuration baseline
+- Server-side skeleton and configuration baseline artifacts
 - Android fork integration checkpoint
 
 ## EXECUTION_RULE
@@ -44,11 +45,11 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-002 without expanding into server or Android implementation.
+Propose CP-003 for server-side skeleton and configuration baseline without starting implementation.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
-If CP-002 execution expands beyond repository bootstrap, continuity and checkpoint discipline will degrade before implementation begins.
+If future work jumps into server or Android code before CP-003 is defined, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
