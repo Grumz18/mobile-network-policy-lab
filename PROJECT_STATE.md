@@ -6,7 +6,7 @@ adaptive-mobile-network-lab
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, and server baseline definition are complete through CP-003.
 The repository is operating under a checkpoint-driven workflow with documented local and server bootstrap guidance.
-The next eligible work is to define CP-004 without starting Android implementation early.
+CP-004 is defined and pending execution.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -29,6 +29,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - First checkpoint file finalized
 - Second checkpoint executed and finalized
 - Third checkpoint executed and finalized
+- Fourth checkpoint file defined
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -40,7 +41,6 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Server baseline verification script
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Android fork integration checkpoint
 - Android fork integration baseline artifacts
 
 ## EXECUTION_RULE
@@ -48,11 +48,11 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Propose CP-004 for Android fork integration baseline without starting implementation.
+Execute CP-004 without implementing Android code, transport logic, or server changes.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
-If future work starts Android or transport implementation before CP-004 is defined, continuity and checkpoint discipline will degrade.
+If CP-004 execution expands into Android code or fork synchronization, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
