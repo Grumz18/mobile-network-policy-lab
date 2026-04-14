@@ -1,0 +1,15 @@
+# Local server environment
+.env
+.env.local
+
+# Logs and temp files
+*.log
+tmp/
+temp/
+
+# Build and cache output
+build/
+dist/
+coverage/
+__pycache__/
+node_modules/
