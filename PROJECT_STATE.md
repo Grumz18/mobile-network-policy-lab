@@ -4,9 +4,9 @@
 adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
-Repository bootstrap, governance anchoring, repository execution-surface bootstrap, and server baseline definition are complete through CP-003.
-The repository is operating under a checkpoint-driven workflow with documented local and server bootstrap guidance.
-CP-004 is defined and pending execution.
+Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, and Android fork baseline definition are complete through CP-004.
+The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
+The next eligible work is to define CP-005 without starting Android implementation early.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -16,8 +16,8 @@ The following bootstrap files are assumed to exist and remain authoritative:
 - docs/bootstrap/03_OWNER_PROJECT_MAP.md
 
 ## CURRENT_OBJECTIVE
-Preserve the repository and server bootstrap baselines created through CP-003.
-Prepare the next bounded checkpoint for Android fork integration baseline.
+Preserve the repository, server, and Android bootstrap baselines created through CP-004.
+Prepare the next bounded checkpoint for Android workspace skeleton and local build baseline.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -29,7 +29,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - First checkpoint file finalized
 - Second checkpoint executed and finalized
 - Third checkpoint executed and finalized
-- Fourth checkpoint file defined
+- Fourth checkpoint executed and finalized
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -39,20 +39,24 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Server baseline document
 - Server workspace baseline files
 - Server baseline verification script
+- Android fork baseline document
+- Android workspace baseline files
+- Android baseline verification script
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Android fork integration baseline artifacts
+- Fifth checkpoint file for Android workspace skeleton and local build baseline
+- Android workspace skeleton and local build baseline artifacts
 
 ## EXECUTION_RULE
 From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-004 without implementing Android code, transport logic, or server changes.
+Propose CP-005 for Android workspace skeleton and local build baseline without starting Android product implementation.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
-If CP-004 execution expands into Android code or fork synchronization, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, or transport logic before CP-005 is defined, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.

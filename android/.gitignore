@@ -1,0 +1,15 @@
+# Local Android environment
+.env
+.env.local
+local.properties
+
+# Logs and temp files
+*.log
+tmp/
+temp/
+
+# Build and cache output
+.gradle/
+build/
+captures/
+out/
