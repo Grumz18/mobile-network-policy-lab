@@ -4,7 +4,7 @@ A personal research-grade mobile networking project built with a checkpoint-driv
 
 ## Current Status
 Repository bootstrap is complete.
-The project is now entering its first controlled execution phase.
+CP-001 establishes the repository governance anchor and confirms the project is now checkpoint-driven.
 
 ## Project Direction
 The current direction is:
@@ -39,18 +39,18 @@ Each checkpoint must declare:
 - handoff block
 
 ## Repository Structure
-- `docs/` — project documentation
-- `docs/bootstrap/` — core LLM guidance files
-- `checkpoints/` — bounded execution units
-- `android/` — Android client work
-- `ios/` — iOS client work
-- `server/` — server-side work
-- `infra/` — deployment and environment definitions
-- `scripts/` — helper scripts
-- `.github/` — repository automation
+- `docs/` - project documentation
+- `docs/bootstrap/` - core LLM guidance files
+- `checkpoints/` - bounded execution units
+- `android/` - Android client work
+- `ios/` - iOS client work
+- `server/` - server-side work
+- `infra/` - deployment and environment definitions
+- `scripts/` - helper scripts
+- `.github/` - repository automation
 
 ## Immediate Next Step
-Execute `CP-001` and finalize the repository execution anchor.
+Propose `CP-002` as the next active checkpoint for repository execution surface and development environment bootstrap.
 
 ## Continuity Goal
 A future LLM should be able to continue this project using only the repository contents and the latest checkpoint state.
