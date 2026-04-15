@@ -5,8 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, and Android local build baseline definition are complete through CP-005.
+CP-006 has been defined (pending execution) for Android fork intake and patch workflow baseline.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to define CP-006 without starting Android implementation early.
+The next eligible work is to execute CP-006.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -17,7 +18,7 @@ The following bootstrap files are assumed to exist and remain authoritative:
 
 ## CURRENT_OBJECTIVE
 Preserve the repository, server, and Android bootstrap baselines created through CP-005.
-Prepare the next bounded checkpoint for Android fork intake and patch workflow baseline.
+Execute CP-006 to establish the Android fork intake and patch workflow baseline.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -48,15 +49,14 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Android local build verification script
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Sixth checkpoint file for Android fork intake and patch workflow baseline
-- Android fork intake and patch workflow baseline artifacts
+- Android fork intake and patch workflow baseline artifacts (CP-006 defined, pending execution)
 
 ## EXECUTION_RULE
 From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Propose CP-006 for Android fork intake and patch workflow baseline without starting Android product implementation.
+Execute CP-006 to create fork intake and patch workflow baseline documents and verification script.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
