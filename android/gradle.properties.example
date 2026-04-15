@@ -1,0 +1,5 @@
+# Non-secret local Gradle placeholders for future Android workspace work.
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+org.gradle.parallel=false
+org.gradle.configuration-cache=false
+android.useAndroidX=true
