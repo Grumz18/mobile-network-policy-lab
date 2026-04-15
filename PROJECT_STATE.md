@@ -4,10 +4,9 @@
 adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
-Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, and Android fork intake and patch workflow baseline are complete through CP-006.
+Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, and upstream fork snapshot materialization are complete through CP-007.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-CP-007 has been defined (pending execution) for materializing the upstream NekoBox snapshot into android/fork/.
-The next eligible work is to execute CP-007.
+The next eligible work is to define CP-008.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -17,8 +16,8 @@ The following bootstrap files are assumed to exist and remain authoritative:
 - docs/bootstrap/03_OWNER_PROJECT_MAP.md
 
 ## CURRENT_OBJECTIVE
-Preserve all baselines created through CP-006.
-Execute CP-007 to materialize the upstream NekoBox snapshot into android/fork/.
+Preserve all baselines created through CP-007.
+Prepare the next bounded checkpoint for initial Android build verification.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -33,6 +32,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Fourth checkpoint executed and finalized
 - Fifth checkpoint executed and finalized
 - Sixth checkpoint executed and finalized
+- Seventh checkpoint executed and finalized
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -51,17 +51,19 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Android fork intake document
 - Android patch workflow document
 - Android fork intake verification script
+- Materialized upstream NekoBox snapshot in android/fork/ (commit 5768494d8ae3c74a057bb6d46c0f8dc071b0d821)
+- Upstream tracking metadata file
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Materialized upstream fork code in android/fork/ (requires CP-007)
-- Local patches against fork content (requires post-intake checkpoint)
+- Initial Android build verification (requires CP-008)
+- Local patches against fork content (requires post-build-verification checkpoint)
 
 ## EXECUTION_RULE
 From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-007 to materialize the upstream NekoBox snapshot into android/fork/ following docs/android/ANDROID_FORK_INTAKE.md.
+Define CP-008 for initial Android build verification (confirm the materialized fork compiles or identify build prerequisites).
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.

@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -ExecutionPolicy Bypass -File android/scripts/verify-fork-intake.ps1)"
+      "Bash(powershell -ExecutionPolicy Bypass -File android/scripts/verify-fork-intake.ps1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api.github.com/repos/MatsuriDayo/NekoBoxForAndroid)",
+      "Bash(curl -s https://api.github.com/repos/MatsuriDayo/NekoBoxForAndroid)",
+      "Bash(curl -s https://api.github.com/repos/MatsuriDayo/NekoBoxForAndroid/commits/main)",
+      "Bash(curl -L -o android/fork/upstream-snapshot.zip \"https://github.com/MatsuriDayo/NekoBoxForAndroid/archive/5768494d8ae3c74a057bb6d46c0f8dc071b0d821.zip\")",
+      "Bash(mkdir -p tmp-extract)",
+      "Bash(unzip -q upstream-snapshot.zip -d tmp-extract)",
+      "Bash(cp -r android/fork/tmp-extract/NekoBoxForAndroid-5768494d8ae3c74a057bb6d46c0f8dc071b0d821/* android/fork/)",
+      "Bash(cp -r android/fork/tmp-extract/NekoBoxForAndroid-5768494d8ae3c74a057bb6d46c0f8dc071b0d821/.* android/fork/)"
     ]
   }
 }
