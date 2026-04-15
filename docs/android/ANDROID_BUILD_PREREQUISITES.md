@@ -1,0 +1,144 @@
+# Android Build Prerequisites
+
+## Purpose
+This document records all toolchain prerequisites and external source dependencies installed or materialized during CP-009.
+It serves as the durable prerequisite manifest for subsequent Android build checkpoints.
+
+## Checkpoint
+CP-009
+
+## Date
+2026-04-15
+
+## Installed Toolchain Components
+
+### JDK
+| Field | Value |
+| --- | --- |
+| Distribution | Eclipse Temurin JDK with Hotspot 17 |
+| Version | 17.0.18+8 |
+| Install path | `C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot` |
+| `JAVA_HOME` | `C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot` |
+| `java -version` | `openjdk version "17.0.18" 2026-01-20` |
+| `javac -version` | `javac 17.0.18` |
+| Install method | `winget install --id EclipseAdoptium.Temurin.17.JDK` |
+
+### Android SDK
+| Field | Value |
+| --- | --- |
+| SDK root | `C:\Android\Sdk` |
+| `ANDROID_HOME` | `C:\Android\Sdk` |
+| Command-line Tools | `cmdline-tools/latest` (source `commandlinetools-win-11076708_latest.zip`) |
+| Platform | `platforms;android-35` (API 35) |
+| Build Tools | `build-tools;35.0.1` |
+| Platform Tools | `platform-tools` (v37.0.0, includes `adb.exe`) |
+| NDK | `ndk;25.0.8775105` (`Pkg.Revision = 25.0.8775105`) |
+| NDK path | `C:\Android\Sdk\ndk\25.0.8775105` |
+| Licenses | All accepted via `sdkmanager --licenses` |
+| Install method | Downloaded command-line tools zip, then `sdkmanager` for components |
+
+### Go
+| Field | Value |
+| --- | --- |
+| Version | `go1.23.6 windows/amd64` |
+| Install path | `C:\Program Files\Go` |
+| `GOROOT` | `C:\Program Files\Go` |
+| `GOPATH` | `C:\Users\grUm.IGOR\go` |
+| `go version` | `go version go1.23.6 windows/amd64` |
+| Install method | `winget install --id GoLang.Go --version 1.23.6` |
+| Note | Matches the `toolchain go1.23.6` directive in `libcore/go.mod` exactly |
+
+### Gradle Wrapper
+| Field | Value |
+| --- | --- |
+| Distribution version | `8.10.2` |
+| Cache location | `%USERPROFILE%\.gradle\wrapper\dists\gradle-8.10.2-bin` |
+| Wrapper path | `android/fork/gradlew.bat` |
+| Verification working directory | `C:\Users\grUm.IGOR\Documents\mobile-network-policy-lab\android\fork` |
+| Verified command | `$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot'; $env:Path="$env:JAVA_HOME\bin;$env:Path"; .\gradlew.bat --version` |
+| Launcher JVM | JDK 17.0.18 (Temurin) |
+
+Corrective verification note:
+- Gradle wrapper bootstrap is confirmed by direct PowerShell invocation from `android/fork/`.
+- This verification intentionally avoided Bash and any Bash-to-cmd bridge.
+- The current default shell session still resolves `java` to Java 8 unless `JAVA_HOME` is set explicitly, so wrapper verification must set `JAVA_HOME` per-session until the environment is persisted.
+
+### POSIX Shell
+| Field | Value |
+| --- | --- |
+| Provider | Git for Windows (Git Bash) |
+| Bash path | `C:\Program Files\Git\bin\bash.exe` |
+| Bash version | `GNU bash, version 5.2.37(1)-release (x86_64-pc-msys)` |
+| Alt path | `C:\Program Files\Git\usr\bin\bash.exe` |
+| Note | `C:\Windows\system32\bash.exe` (WSL) is non-functional on this host; do not use it |
+
+### gomobile-matsuri / gobind-matsuri
+| Field | Value |
+| --- | --- |
+| Source repository | `https://github.com/MatsuriDayo/gomobile.git` |
+| Source branch | `master2` |
+| Source commit | `17d6af3` |
+| `gomobile-matsuri` path | `C:\Users\grUm.IGOR\go\bin\gomobile-matsuri.exe` |
+| `gobind-matsuri` path | `C:\Users\grUm.IGOR\go\bin\gobind-matsuri.exe` |
+| Build method | `go install -v` from `cmd/gomobile` and `cmd/gobind`, then rename |
+
+### Git
+| Field | Value |
+| --- | --- |
+| Version | `git version 2.49.0.windows.1` |
+| Path | `C:\Program Files\Git\cmd\git.exe` |
+| Note | Already present before CP-009; not installed by this checkpoint |
+
+## External Source Dependencies
+
+### libneko
+| Field | Value |
+| --- | --- |
+| Module path | `github.com/matsuridayo/libneko` |
+| Upstream URL | `https://github.com/MatsuriDayo/libneko.git` |
+| Local path | `android/libneko/` |
+| Resolves from | `../../libneko` relative to `android/fork/libcore/` |
+| HEAD at materialization | `1c47a3a` (`update speedtest`) |
+| Clone method | `git clone` at default branch HEAD |
+| Note | Revision not pinned by upstream snapshot; may need alignment in a future checkpoint |
+
+### sing-box
+| Field | Value |
+| --- | --- |
+| Module path | `github.com/sagernet/sing-box` |
+| Upstream URL | `https://github.com/MatsuriDayo/sing-box.git` (MatsuriDayo fork, not sagernet upstream) |
+| Local path | `android/sing-box/` |
+| Resolves from | `../../sing-box` relative to `android/fork/libcore/` |
+| HEAD at materialization | `ab23e111` (`Add multi-peer support for wireguard outbound`) |
+| Clone method | `git clone` at default branch HEAD |
+| Note | Revision not pinned by upstream snapshot; may need alignment in a future checkpoint |
+
+## Local Configuration Files
+
+### android/fork/local.properties
+```properties
+## This file was generated by CP-009 for local Android SDK path resolution.
+## Do not commit to version control.
+sdk.dir=C:/Android/Sdk
+```
+
+## Environment Variables Required at Build Time
+The following environment variables must be set in any shell session that attempts an Android build:
+
+| Variable | Value | Notes |
+| --- | --- | --- |
+| `JAVA_HOME` | `C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot` | Required by Gradle |
+| `ANDROID_HOME` | `C:\Android\Sdk` | Required by AGP and sdkmanager |
+| `ANDROID_NDK_HOME` | `C:\Android\Sdk\ndk\25.0.8775105` | May be auto-discovered, but explicit is safer |
+| `GOPATH` | `C:\Users\grUm.IGOR\go` | Go default; gomobile/gobind installed here |
+| `PATH` additions | `%JAVA_HOME%\bin`, `%GOROOT%\bin`, `%GOPATH%\bin`, `%ANDROID_HOME%\platform-tools`, `%ANDROID_HOME%\cmdline-tools\latest\bin` | Required for CLI access |
+
+Note: these variables are not yet persisted to the system or user environment profile. They must be set per-session or added to the user environment manually. The Gradle wrapper reads `JAVA_HOME`; the Android SDK path is resolved from `local.properties` first.
+
+## Components Not Yet Generated
+| Component | Status | Notes |
+| --- | --- | --- |
+| `android/fork/app/libs/libcore.aar` | Not generated | Requires `libcore/build.sh` execution in a future checkpoint |
+
+## Skipped Components
+None. All components defined in CP-009 scope were installed or materialized.
