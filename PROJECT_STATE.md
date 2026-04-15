@@ -6,7 +6,8 @@ adaptive-mobile-network-lab
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, and Android fork intake and patch workflow baseline are complete through CP-006.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to define CP-007.
+CP-007 has been defined (pending execution) for materializing the upstream NekoBox snapshot into android/fork/.
+The next eligible work is to execute CP-007.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -17,7 +18,7 @@ The following bootstrap files are assumed to exist and remain authoritative:
 
 ## CURRENT_OBJECTIVE
 Preserve all baselines created through CP-006.
-Prepare the next bounded checkpoint for executing the fork intake (materializing upstream NekoBox code).
+Execute CP-007 to materialize the upstream NekoBox snapshot into android/fork/.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -60,7 +61,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Define CP-007 for executing the fork intake (materialize upstream NekoBox code into android/fork/).
+Execute CP-007 to materialize the upstream NekoBox snapshot into android/fork/ following docs/android/ANDROID_FORK_INTAKE.md.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
