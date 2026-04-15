@@ -6,7 +6,7 @@ adaptive-mobile-network-lab
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, and Android fork baseline definition are complete through CP-004.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to define CP-005 without starting Android implementation early.
+CP-005 is defined and pending execution.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -30,6 +30,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Second checkpoint executed and finalized
 - Third checkpoint executed and finalized
 - Fourth checkpoint executed and finalized
+- Fifth checkpoint file defined
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -44,7 +45,6 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Android baseline verification script
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Fifth checkpoint file for Android workspace skeleton and local build baseline
 - Android workspace skeleton and local build baseline artifacts
 
 ## EXECUTION_RULE
@@ -52,11 +52,11 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Propose CP-005 for Android workspace skeleton and local build baseline without starting Android product implementation.
+Execute CP-005 without implementing Android product features, per-app routing, or transport logic.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from governance into implementation.
-If future work starts Android product implementation, per-app routing, or transport logic before CP-005 is defined, continuity and checkpoint discipline will degrade.
+If CP-005 execution expands into Android product implementation, per-app routing, or transport logic, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
