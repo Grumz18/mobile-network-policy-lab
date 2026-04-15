@@ -5,8 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, and Android build-prerequisite bootstrap are complete through CP-009.
+CP-010 is now defined as the next bounded checkpoint and remains unexecuted.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to define and execute CP-010 for the first Android build attempt.
+The next eligible work is to execute CP-010 for the first Android build attempt.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -18,7 +19,7 @@ The following bootstrap files are assumed to exist and remain authoritative:
 ## CURRENT_OBJECTIVE
 Preserve all baselines created through CP-009.
 All Android build prerequisites are installed and external source dependencies are materialized.
-The next step is to attempt the first Android build (libcore native bridge and Gradle app assembly) in a bounded checkpoint.
+The next step is to execute CP-010 for the first Android build attempt (session Java setup, `libcore.aar` generation if required, and first safe Gradle entry) without repair work.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -36,6 +37,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Seventh checkpoint executed and finalized
 - Eighth checkpoint executed and finalized
 - Ninth checkpoint executed and finalized
+- Tenth checkpoint defined (execution pending)
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -73,13 +75,13 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Define and execute CP-010 to attempt the first Android build using the bootstrapped prerequisites — libcore native bridge generation followed by Gradle sync and app assembly.
+Execute CP-010 to attempt the first Android build using the bootstrapped prerequisites and to document the first build-time blocker without repair.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from build attempts into unbounded repair or implementation.
 The `libneko` and `sing-box` source trees are cloned at default branch HEAD, not pinned to a revision matching the upstream fork snapshot. Go module resolution during the first build may expose version mismatches.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, or transport logic before a successful build is confirmed, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or ad hoc build repair before CP-010 is executed and its blockers are documented, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
