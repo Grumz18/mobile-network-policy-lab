@@ -4,10 +4,9 @@
 adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
-Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, and the first Android build attempt are complete through CP-010.
-CP-011 is now defined as the next bounded checkpoint and remains unexecuted.
+Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, and libcore gomobile blocker diagnosis are complete through CP-011.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to execute CP-011 to diagnose the libcore gomobile/go.mod blocker.
+The next eligible work is to define CP-012 from the documented CP-011 blocker diagnosis.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -17,9 +16,9 @@ The following bootstrap files are assumed to exist and remain authoritative:
 - docs/bootstrap/03_OWNER_PROJECT_MAP.md
 
 ## CURRENT_OBJECTIVE
-Preserve all baselines created through CP-010.
-The first Android build attempt has been executed and the first blocker is now documented in the native `libcore` build path.
-The next step is to execute CP-011 to isolate the exact generated failing path and blocker origin before any repair checkpoint is defined.
+Preserve all baselines created through CP-011.
+The libcore gomobile/go.mod blocker is now localized to zero-byte generated `go.mod` files under `.build/src-android-*`.
+The next step is to define the smallest bounded repair checkpoint before retrying the native build path.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -38,7 +37,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Eighth checkpoint executed and finalized
 - Ninth checkpoint executed and finalized
 - Tenth checkpoint executed and finalized
-- Eleventh checkpoint defined (execution pending)
+- Eleventh checkpoint executed and finalized
 - README aligned to the checkpoint workflow
 - Repository execution surface document
 - Development environment bootstrap document
@@ -63,6 +62,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Android build prerequisites manifest
 - Android prerequisite verification script
 - First Android build attempt report
+- Libcore gomobile blocker diagnosis report
 - Materialized external source dependencies (`android/libneko/`, `android/sing-box/`)
 - `android/fork/local.properties` for SDK path resolution
 - Installed JDK 17, Android SDK (platform 35, Build Tools 35.0.1, NDK 25.0.8775105), Go 1.23.6, gomobile-matsuri, gobind-matsuri
@@ -77,14 +77,14 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-011 to diagnose and bound the `gomobile-matsuri` / intermediate `go.mod` blocker discovered during `libcore.aar` generation.
+Define CP-012 to apply the smallest evidence-backed repair for the zero-byte generated `go.mod` files in the libcore gomobile path.
 
 ## RISK_NOTES
-The main risk at this stage is scope drift from blocker diagnosis into unbounded repair or implementation.
-The current first blocker sits in the gomobile/native bridge path before Gradle app assembly, so later Android build issues are still unknown.
+The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
+The current blocker is localized to generated temporary module state in the gomobile/native bridge path, but the exact repair may still need to distinguish between gomobile behavior and upstream layout assumptions.
 The `libneko` and `sing-box` source trees are cloned at default branch HEAD, not pinned to a revision matching the upstream fork snapshot. Additional module-alignment issues may appear after the current blocker is resolved.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-011 is executed and its diagnostic result is documented, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-012 is defined, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
