@@ -5,8 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, and initial Android build verification are complete through CP-008.
+CP-009 has been defined to bootstrap Android build prerequisites and materialize external source dependencies based on the CP-008 blocker report.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to define CP-009 from the documented CP-008 blockers.
+The next eligible work is to execute CP-009.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -17,7 +18,7 @@ The following bootstrap files are assumed to exist and remain authoritative:
 
 ## CURRENT_OBJECTIVE
 Preserve all baselines created through CP-008.
-Use the CP-008 verification report to define the next bounded checkpoint for prerequisite bootstrap and external dependency materialization.
+CP-009 is defined and pending execution. It covers toolchain prerequisite installation, external source dependency materialization, host/runtime clarification, and verification artifact production.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -66,7 +67,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Define CP-009 to bootstrap the missing Android build prerequisites and external source dependencies identified by CP-008.
+Execute CP-009 to install missing Android build prerequisites, materialize external source dependencies, and produce verification artifacts.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from verification into unbounded repair or implementation.
