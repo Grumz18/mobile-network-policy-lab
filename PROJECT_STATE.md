@@ -4,9 +4,9 @@
 adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
-Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, and CP-020 post-javac continuation checkpoint execution are complete.
+Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, and CP-021 post-compile-jar continuation checkpoint definition are complete.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to create CP-021 only.
+The next eligible work is to execute CP-021 only.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -26,7 +26,8 @@ CP-019 now defines the next exact downstream continuation surface after successf
 CP-019 execution then proved that the first exact downstream Java compile consumer surface also succeeds under the persisted sing-box baseline.
 CP-020 now defines the next exact downstream continuation surface after successful Java compilation as the app compile-jar consumer path entered by `.\gradlew.bat :app:bundleOssDebugClassesToCompileJar --stacktrace`, while keeping that probe separate from runtime-jar merge, dexing, packaging, assemble, or repair work.
 CP-020 execution then proved that the first exact downstream compile-jar consumer surface also succeeds under the persisted sing-box baseline.
-The next step is to create CP-021 only so the smallest bounded surface after successful compile-jar merge is defined without broadening into runtime-jar merge execution, dexing, packaging, or repair work.
+CP-021 now defines the next exact downstream continuation surface after successful compile-jar merge as the app runtime-jar consumer path entered by `.\gradlew.bat :app:bundleOssDebugClassesToRuntimeJar --stacktrace`, while keeping that probe separate from dexing, packaging, assemble, or repair work.
+The next step is to execute CP-021 only so the first exact runtime-jar-side outcome is captured without broadening into dexing, packaging, or repair work.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -89,6 +90,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - CP-019 post-kotlin continuation execution report
 - CP-020 post-javac continuation checkpoint definition
 - CP-020 post-javac continuation execution report
+- CP-021 post-compile-jar continuation checkpoint definition
 - Materialized external source dependencies (`android/libneko/`, `android/sing-box/`)
 - Intentional local `android/sing-box` baseline on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`
 - `android/fork/local.properties` for SDK path resolution
@@ -105,7 +107,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Create CP-021 only to define the first exact bounded continuation surface after successful `.\gradlew.bat :app:bundleOssDebugClassesToCompileJar --stacktrace`, most likely the runtime-jar merge surface immediately downstream of compile-jar merge, without broadening into dexing, packaging, assemble, or repair work.
+Execute CP-021 only to probe the first exact bounded continuation surface after successful `.\gradlew.bat :app:bundleOssDebugClassesToCompileJar --stacktrace`, using `.\gradlew.bat :app:bundleOssDebugClassesToRuntimeJar --stacktrace`, and stop at the first exact runtime-jar-side outcome without broadening into dexing, packaging, assemble, or repair work.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
@@ -118,13 +120,13 @@ CP-017 then persisted that same validated `android/sing-box` alignment on local 
 CP-018 then proved that the first downstream app compile consumer surface is not the next blocker: the bounded `.\gradlew.bat :app:compileOssDebugKotlin --stacktrace` probe completed successfully.
 CP-019 then proved that the first downstream Java compile consumer surface is also not the next blocker: the bounded `.\gradlew.bat :app:compileOssDebugJavaWithJavac --stacktrace` probe completed successfully.
 CP-020 then proved that the first downstream compile-jar consumer surface is also not the next blocker: the bounded `.\gradlew.bat :app:bundleOssDebugClassesToCompileJar --stacktrace` probe completed successfully.
-The next exact downstream surface remains undefined by design; continuity will degrade if future work skips checkpoint definition for the runtime-jar-side continuation and jumps directly into dexing, packaging, or `assemble*`.
+CP-021 now defines the next exact downstream runtime-jar continuation surface as `.\gradlew.bat :app:bundleOssDebugClassesToRuntimeJar --stacktrace`; continuity will degrade if future work skips that bounded surface and jumps into dexing, packaging, or `assemble*`.
 Version drift remains a risk at the tool-build layer because the isolated repaired `gomobile-matsuri` binary still rebuilt under `go1.24.0`, but the generated workspace itself no longer drifted to `go1.25.x`.
 The disposable CP-017, CP-018, and CP-019 validation workspaces were removed after evidence capture, so the default installed `gomobile-matsuri` path remains unchanged.
 The current local `android/sing-box` checkout is now intentionally persisted on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`; continuity will degrade if that local branch is changed without updating checkpoint artifacts.
 CP-018 intentionally proved the Kotlin compile consumer surface only; continuity will degrade if future work skips checkpoint definition for the next downstream surface and jumps into `assemble*`, packaging, or repair work first.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-021 is defined and approved, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-021 is executed and closed, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
