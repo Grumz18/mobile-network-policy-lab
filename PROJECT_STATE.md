@@ -5,8 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, CP-021 post-compile-jar continuation checkpoint definition, CP-021 post-compile-jar continuation checkpoint execution, CP-022 post-runtime-jar continuation checkpoint definition, CP-022 post-runtime-jar continuation checkpoint execution, and CP-023 post-dex continuation checkpoint definition are complete.
+CP-023 post-dex continuation checkpoint execution is partial, and CP-024 post-merge-project-dex continuation checkpoint definition is complete.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to execute CP-023 only.
+The next eligible work is to execute CP-024 only.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -31,7 +32,9 @@ CP-021 execution then proved that the first exact downstream runtime-jar consume
 CP-022 now defines the next exact downstream continuation surface after successful runtime-jar merge as the first dex-side app consumer path entered by `.\gradlew.bat :app:dexBuilderOssDebug --stacktrace`, while keeping that probe separate from merge-dex, packaging, install, assemble, or repair work.
 CP-022 execution then proved that the first exact downstream dex-builder consumer surface also succeeds under the persisted sing-box baseline.
 CP-023 now defines the next exact downstream continuation surface after successful dex-builder generation as the first merge-project-dex app consumer path entered by `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace`, while keeping that probe separate from other merge-dex, packaging, install, assemble, or repair work.
-The next step is to execute CP-023 only so the first exact merge-project-dex outcome is captured without broadening into downstream build continuation.
+CP-023 execution then proved that `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace` succeeds under the persisted sing-box baseline, but it materializes output under `android/fork/app/build/intermediates/dex/ossDebug/mergeProjectDexOssDebug` rather than the authored `android/fork/app/build/intermediates/merged_project_dex/ossDebug` boundary.
+CP-024 now redefines the next exact downstream continuation from that observed result as the first bounded merge-ext-dex surface entered by `.\gradlew.bat :app:mergeExtDexOssDebug --stacktrace`, while keeping that probe separate from `mergeLibDex*`, packaging, install, assemble, or repair work.
+The next step is to execute CP-024 only so the first exact merge-ext-dex outcome is captured without broadening into downstream build continuation.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -99,6 +102,8 @@ No server or Android implementation should begin outside an approved checkpoint.
 - CP-022 post-runtime-jar continuation checkpoint definition
 - CP-022 post-runtime-jar continuation execution report
 - CP-023 post-dex continuation checkpoint definition
+- CP-023 post-dex continuation execution report
+- CP-024 post-merge-project-dex continuation checkpoint definition
 - Materialized external source dependencies (`android/libneko/`, `android/sing-box/`)
 - Intentional local `android/sing-box` baseline on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`
 - `android/fork/local.properties` for SDK path resolution
@@ -115,7 +120,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-023 only to probe the first exact bounded continuation surface after successful `.\gradlew.bat :app:dexBuilderOssDebug --stacktrace` with `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace`, without broadening into other merge-dex, packaging, install, or assemble work.
+Execute CP-024 only to probe the first exact bounded continuation surface after the observed successful `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace` result with `.\gradlew.bat :app:mergeExtDexOssDebug --stacktrace`, without broadening into `mergeLibDex*`, packaging, install, or assemble work.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
@@ -132,13 +137,15 @@ CP-021 then proved that the first downstream runtime-jar consumer surface is als
 CP-022 now defines the next exact downstream dex-side continuation surface as the bounded `.\gradlew.bat :app:dexBuilderOssDebug --stacktrace` probe aligned with the still-absent `android/fork/app/build/intermediates/project_dex_archive/ossDebug` output family.
 CP-022 then proved that the first downstream dex-builder consumer surface is also not the next blocker: the bounded `.\gradlew.bat :app:dexBuilderOssDebug --stacktrace` probe completed successfully and created `android/fork/app/build/intermediates/project_dex_archive/ossDebug`.
 CP-023 now defines the next exact downstream merge-project-dex continuation surface as the bounded `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace` probe aligned with the still-absent `android/fork/app/build/intermediates/merged_project_dex/ossDebug` output family.
-Continuity will degrade if future work skips that bounded merge-project-dex surface and jumps directly into other merge-dex work, packaging, or `assemble*`.
+CP-023 execution then proved that `.\gradlew.bat :app:mergeProjectDexOssDebug --stacktrace` succeeds, but it writes directly into `android/fork/app/build/intermediates/dex/ossDebug/mergeProjectDexOssDebug` and does not create `android/fork/app/build/intermediates/merged_project_dex/ossDebug`.
+CP-024 now redefines the next exact downstream merge-dex continuation surface as the bounded `.\gradlew.bat :app:mergeExtDexOssDebug --stacktrace` probe aligned with the still-absent `android/fork/app/build/intermediates/dex/ossDebug/mergeExtDexOssDebug` output family.
+Continuity will degrade if future work keeps assuming `merged_project_dex/ossDebug` is the next boundary or jumps directly into broader merge-dex, packaging, or `assemble*` work without executing the corrected bounded merge-ext-dex surface first.
 Version drift remains a risk at the tool-build layer because the isolated repaired `gomobile-matsuri` binary still rebuilt under `go1.24.0`, but the generated workspace itself no longer drifted to `go1.25.x`.
 The disposable CP-017, CP-018, and CP-019 validation workspaces were removed after evidence capture, so the default installed `gomobile-matsuri` path remains unchanged.
 The current local `android/sing-box` checkout is now intentionally persisted on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`; continuity will degrade if that local branch is changed without updating checkpoint artifacts.
 CP-018 intentionally proved the Kotlin compile consumer surface only; continuity will degrade if future work skips checkpoint definition for the next downstream surface and jumps into `assemble*`, packaging, or repair work first.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-023 is executed and closed, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-024 is executed and closed under a bounded checkpoint, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
