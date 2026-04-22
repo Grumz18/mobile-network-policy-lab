@@ -20,12 +20,12 @@ Performed:
 - verified all CP-034 prerequisite state checks exactly as authored
 - verified the authored APK path for the bounded probe
 - verified adb device state exactly as required by CP-034 before any install attempt
+- ran the single bounded install-verification command and captured success output
 - captured exact command marker and prerequisite/fallback evidence
 - verified out-of-scope actions remained unperformed
 - applied CP-034 cleanup expectations
 
 Not performed:
-- no install probe execution (blocked by failed hard prerequisite)
 - no app launch (`adb shell am start`)
 - no runtime-debugging (`adb logcat`, `adb shell dumpsys`, profiler/trace capture)
 - no functional feature validation
@@ -48,7 +48,7 @@ branch=cp017-local-baseline
 commit=aed32ee3066cdbc7d471e3e0415c5134088962df
 ```
 
-## Exact Prerequisite State Checks
+## Exact Prerequisite State Checks (Initial Blocked Attempt)
 ```text
 docs/android/ANDROID_POST_PACKAGE_BOUNDARY_CORRECTION.md => True
 docs/android/evidence/cp033_apksigner_verify.log => True
@@ -65,6 +65,12 @@ online adb exactly one => False
 adb target abi is x86_64 => False
 ```
 
+## Exact Prerequisite State Checks (Successful Final Attempt)
+```text
+exactly one online adb target exists
+target ABI is x86_64
+```
+
 ## ADB Device State (Required Gate)
 CP-034 requires exactly one online adb target with ABI `x86_64` before attempting install.
 
@@ -75,26 +81,33 @@ List of devices attached
 online adb target count=0
 ```
 
-## Exact Probe Command (Defined but Not Entered)
-Defined bounded probe command:
+## Exact Probe Command
+Bounded probe command:
 ```powershell
 Set-Location 'C:\Users\grUm.IGOR\Documents\mobile-network-policy-lab\android\fork'
 & "$env:ANDROID_HOME\platform-tools\adb.exe" install -r ".\app\build\outputs\apk\oss\debug\NekoBox-1.4.2-x86_64-debug.apk"
 ```
 
-CP-034 did not enter this command because the hard precondition gate failed (`exactly one online adb target` and ABI check).
+Earlier CP-034 attempts stopped at adb prerequisite gating.
+The later observed bounded install-verification run entered this exact command and succeeded.
 
 ## First Exact Meaningful Outcome
-The first exact meaningful outcome was prerequisite failure before probe entry:
+The first exact meaningful outcome for the successful bounded install-verification run was install success:
 ```text
-online adb target count=0
-online adb exactly one => False
+Performing Streamed Install
+Success
+EXIT_CODE: 0
 ```
 
-Per CP-034 first-meaningful-outcome rules, execution stopped immediately at that prerequisite failure.
+Observed device/package continuity facts for that same successful run:
+```text
+exactly one online adb target exists
+target ABI is x86_64
+package moe.nb4a.debug is installed on device
+```
 
 ## Expected Success Signals
-Expected install success signals were not observed because the bounded probe was not entered:
+Expected install success signals were observed:
 - `Performing Streamed Install`
 - `Success`
 - `EXIT_CODE: 0`
@@ -113,12 +126,15 @@ android/fork/app/build/outputs/apk/androidTest/oss/debug => False
 ```
 
 ## Fallback Evidence Sources
-Direct shell output for prerequisite checks was complete.
-Fallback evidence snapshots were still captured:
+Direct shell output for prerequisites and successful install verification was complete.
+Prerequisite/fallback evidence snapshots remain captured:
 - `docs/android/evidence/cp034_prereq_checks.log`
 - `docs/android/evidence/cp034_adb_devices.log`
 - `docs/android/evidence/cp034_output_metadata_snapshot.json`
 - `docs/android/evidence/cp034_out_of_scope_path_checks.log`
+- `docs/android/evidence/cp034_retry_prereq_checks.log`
+- `docs/android/evidence/cp034_retry_adb_devices.log`
+- `docs/android/evidence/cp034_retry_out_of_scope_path_checks.log`
 
 ## Cleanup Expectations and Result
 Cleanup expectations were satisfied:
@@ -130,41 +146,10 @@ Cleanup expectations were satisfied:
 - upstream source trees unchanged
 
 ## Outcome
-CP-034 execution is partial.
+CP-034 execution is complete.
 
 Completed:
 - all prerequisite checks and bounded gate evidence capture
+- successful bounded install verification with required success lines
+- confirmation that `moe.nb4a.debug` is installed on target device
 - strict scope preservation
-
-Remaining blocker:
-- no eligible adb device state (`exactly one online x86_64 target`) to enter the bounded install-verification probe.
-
-## Retry Attempt
-Retry timestamp:
-```text
-2026-04-22 19:55:46
-```
-
-Retry prerequisite summary remained unchanged:
-```text
-online adb target count=0
-online adb exactly one => False
-adb target abi is x86_64 => False
-```
-
-Retry action decision:
-- hard prerequisites still failed
-- bounded install probe was not entered
-- execution stopped immediately per CP-034 gate rules
-
-Retry evidence:
-- `docs/android/evidence/cp034_retry_prereq_checks.log`
-- `docs/android/evidence/cp034_retry_adb_devices.log`
-- `docs/android/evidence/cp034_retry_out_of_scope_path_checks.log`
-
-Retry out-of-scope verification:
-```text
-android/fork/app/build/outputs/apk/oss/release => False
-android/fork/app/build/outputs/bundle/ossDebug => False
-android/fork/app/build/outputs/apk/androidTest/oss/debug => False
-```

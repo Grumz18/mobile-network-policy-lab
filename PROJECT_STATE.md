@@ -5,9 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, CP-021 post-compile-jar continuation checkpoint definition, CP-021 post-compile-jar continuation checkpoint execution, CP-022 post-runtime-jar continuation checkpoint definition, CP-022 post-runtime-jar continuation checkpoint execution, and CP-023 post-dex continuation checkpoint definition are complete.
-CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, CP-030 post-merged-native-libs continuation checkpoint definition and execution are complete, CP-031 post-stripped-native-libs continuation checkpoint definition and execution are complete, CP-032 post-validate-signing continuation checkpoint definition is complete while CP-032 execution is partial, CP-033 post-package-boundary-correction checkpoint definition and execution are complete, and CP-034 post-APK-verification continuation checkpoint definition is complete while CP-034 execution is partial.
+CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, CP-030 post-merged-native-libs continuation checkpoint definition and execution are complete, CP-031 post-stripped-native-libs continuation checkpoint definition and execution are complete, CP-032 post-validate-signing continuation checkpoint definition is complete while CP-032 execution is partial, CP-033 post-package-boundary-correction checkpoint definition and execution are complete, and CP-034 post-APK-verification continuation checkpoint definition and execution are complete.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to execute CP-034 only.
+The next eligible work is to create CP-035 only.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -54,9 +54,12 @@ CP-032 execution then proved that `.\gradlew.bat :app:packageOssDebug --stacktra
 CP-033 now redefines that boundary to the observed APK output location `android/fork/app/build/outputs/apk/oss/debug`, explicitly confirms that CP-032 already crossed first APK materialization, and bounds the next continuation to APK verification only.
 CP-033 execution then proved that the bounded `apksigner verify` probe succeeds for `android/fork/app/build/outputs/apk/oss/debug/NekoBox-1.4.2-x86_64-debug.apk`, while out-of-scope install/release/bundle/androidTest paths remain absent.
 CP-034 now defines the next smallest bounded continuation after successful APK verification as one install-verification probe, explicitly separated from launch/runtime continuation.
-CP-034 execution then reached the first exact meaningful outcome at prerequisite gating: no online adb targets were available (`online adb target count=0`), so the bounded install probe was not entered and CP-034 remains partial.
-CP-034 retry execution then revalidated the same prerequisite gate and remained blocked for the same reason (`online adb target count=0`), so the bounded install probe still was not entered.
-The next step is to re-execute CP-034 only after the exact adb prerequisite gate is satisfied.
+CP-034 execution now confirms successful bounded install verification with already-observed evidence:
+- exactly one online adb target exists
+- target ABI is `x86_64`
+- install output includes `Performing Streamed Install` and `Success`
+- package `moe.nb4a.debug` is installed on device
+The next step is to create CP-035 only.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -154,7 +157,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - Cached Gradle 8.10.2 wrapper distribution
 
 ## WHAT_DOES_NOT_EXIST_YET
-- Successful bounded install verification after package-stage boundary correction and APK signature verification
+- Bounded post-install continuation definition (CP-035)
 - Local patches against fork content (requires a post-build-verification checkpoint)
 - A persisted default-environment repair for the libcore gomobile path
 
@@ -163,7 +166,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Re-execute CP-034 only after exactly one online `x86_64` adb target is available, then run the bounded install-verification probe without entering launch/runtime debugging or feature work.
+Create CP-035 only to define the smallest bounded continuation after successful CP-034 install verification, without entering app launch, runtime debugging, interaction testing, or feature work.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
@@ -197,15 +200,14 @@ CP-032 now defines the next exact downstream continuation surface as the bounded
 CP-032 execution proved the bounded `.\gradlew.bat :app:packageOssDebug --stacktrace` surface succeeds, but with path-boundary divergence (`intermediates/apk/oss/debug` absent while `outputs/apk/oss/debug` present).
 CP-033 execution then confirmed the corrected boundary and successful bounded APK verification via `apksigner`.
 CP-034 now bounds the next downstream step to single-probe install verification and separates it from launch/runtime continuation.
-CP-034 execution then proved adb-device availability is an active gate: with zero online targets, install verification cannot start and the checkpoint remains partial.
-CP-034 retry execution confirmed the same gate remains active in current environment: zero online targets still block install-verification entry.
-Continuity will degrade if future work skips CP-034 retry and jumps directly into launch, runtime debugging, or broad `assemble*` work.
+CP-034 execution now confirms successful bounded install verification and preserves the no-launch/no-runtime boundary.
+Continuity will degrade if future work skips CP-035 definition and jumps directly into launch, runtime debugging, interaction testing, or broad `assemble*` work.
 Version drift remains a risk at the tool-build layer because the isolated repaired `gomobile-matsuri` binary still rebuilt under `go1.24.0`, but the generated workspace itself no longer drifted to `go1.25.x`.
 The disposable CP-017, CP-018, and CP-019 validation workspaces were removed after evidence capture, so the default installed `gomobile-matsuri` path remains unchanged.
 The current local `android/sing-box` checkout is now intentionally persisted on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`; continuity will degrade if that local branch is changed without updating checkpoint artifacts.
 CP-018 intentionally proved the Kotlin compile consumer surface only; continuity will degrade if future work skips checkpoint definition for the next downstream surface and jumps into `assemble*`, packaging, or repair work first.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-034 is executed and captured under a bounded checkpoint, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-035 is defined and approved under a bounded checkpoint, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
