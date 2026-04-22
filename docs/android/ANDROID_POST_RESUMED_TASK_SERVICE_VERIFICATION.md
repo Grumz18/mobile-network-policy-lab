@@ -83,3 +83,41 @@ Completed:
 
 Remaining:
 - rerun CP-041 bounded probe in a retry attempt with valid grep expression handling, while keeping identical scope boundaries.
+
+## Retry Outcome (2026-04-23)
+CP-041 was retried in bounded scope with corrected toybox-compatible probe syntax.
+
+Corrected probe command (executed once):
+```powershell
+& "C:/Android/Sdk/platform-tools/adb.exe" -s emulator-5554 shell "dumpsys activity services | grep -m 1 -E 'ServiceRecord.*moe\.nb4a\.debug/'"
+```
+
+Retry prerequisites remained satisfied:
+```text
+online adb target count=1
+online adb target serial=emulator-5554
+target abi=x86_64
+pm path moe.nb4a.debug => package:/data/app/~~5luga3s0QmDqGRYEv51_HA==/moe.nb4a.debug-yGFPWG-QoCmncva-7Hw5PQ==/base.apk
+pidof moe.nb4a.debug => 3551
+```
+
+Retry probe transcript:
+```text
+adb.exe : Failed to write while dumping service activity: Broken pipe
+EXIT_CODE: 1
+```
+
+First exact meaningful outcome in retry:
+```text
+CP-041 retry probe failed: adb.exe : Failed to write while dumping service activity: Broken pipe
+```
+
+Retry result:
+- `partial`
+- stop rule applied immediately after first exact toolchain error line
+
+Retry evidence files:
+- `docs/android/evidence/cp041_retry_adb_devices.log`
+- `docs/android/evidence/cp041_retry_prereq_checks.log`
+- `docs/android/evidence/cp041_retry_probe.log`
+- `docs/android/evidence/cp041_retry_probe.clean.log`
