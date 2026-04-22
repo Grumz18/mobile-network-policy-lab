@@ -5,9 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, CP-021 post-compile-jar continuation checkpoint definition, CP-021 post-compile-jar continuation checkpoint execution, CP-022 post-runtime-jar continuation checkpoint definition, CP-022 post-runtime-jar continuation checkpoint execution, and CP-023 post-dex continuation checkpoint definition are complete.
-CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, and CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete.
+CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, and CP-030 post-merged-native-libs continuation checkpoint definition is complete.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to create CP-030 only.
+The next eligible work is to execute CP-030 only.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -44,7 +44,9 @@ CP-027 execution then proved that `.\gradlew.bat :app:mergeOssDebugJavaResource 
 CP-028 now defines the next exact downstream continuation from that observed result as the first bounded JNI-libs-merge surface entered by `.\gradlew.bat :app:mergeOssDebugJniLibFolders --stacktrace`, while keeping that probe separate from native-lib merge, signing, packaging, install, or assemble work.
 CP-028 execution then proved that `.\gradlew.bat :app:mergeOssDebugJniLibFolders --stacktrace` succeeds under the persisted sing-box baseline and creates `android/fork/app/build/intermediates/merged_jni_libs/ossDebug/mergeOssDebugJniLibFolders` while native-lib/signing/packaging/install/assemble outputs remain absent.
 CP-029 now defines the next exact downstream continuation from that observed result as the first bounded native-libs-merge surface entered by `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace`, while keeping that probe separate from strip/signing/packaging/install/assemble work.
-CP-029 execution then proved that `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace` succeeds under the persisted sing-box baseline and creates `android/fork/app/build/intermediates/merged_native_libs/ossDebug/mergeOssDebugNativeLibs/out` while strip/signing/packaging/install/assemble outputs remain absent. The next step is to create CP-030 only so the first exact downstream continuation after successful `mergeOssDebugNativeLibs` is defined without broadening into downstream build continuation.
+CP-029 execution then proved that `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace` succeeds under the persisted sing-box baseline and creates `android/fork/app/build/intermediates/merged_native_libs/ossDebug/mergeOssDebugNativeLibs/out` while strip/signing/packaging/install/assemble outputs remain absent.
+CP-030 now defines the next exact downstream continuation from that observed result as the first bounded native-strip surface entered by `.\gradlew.bat :app:stripOssDebugDebugSymbols --stacktrace`, while keeping that probe separate from signing/packaging/install/assemble work.
+The next step is to execute CP-030 only so the first exact `stripOssDebugDebugSymbols` outcome can be captured without broadening into downstream build continuation.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -125,6 +127,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - CP-028 post-merged-java-res continuation execution report
 - CP-029 post-merged-jni-libs continuation checkpoint definition
 - CP-029 post-merged-jni-libs continuation execution report
+- CP-030 post-merged-native-libs continuation checkpoint definition
 - Materialized external source dependencies (`android/libneko/`, `android/sing-box/`)
 - Intentional local `android/sing-box` baseline on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`
 - `android/fork/local.properties` for SDK path resolution
@@ -141,7 +144,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Create CP-030 only to define the first exact bounded continuation surface after the observed successful `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace` result, most likely `.\gradlew.bat :app:stripOssDebugDebugSymbols --stacktrace`, without broadening into signing, packaging, install, or assemble work.
+Execute CP-030 only to probe the first exact bounded continuation surface after the observed successful `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace` result with `.\gradlew.bat :app:stripOssDebugDebugSymbols --stacktrace`, without broadening into signing/packaging/install/assemble work.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
@@ -169,13 +172,14 @@ CP-027 now redefines the next exact downstream continuation surface as the bound
 CP-027 execution then proved that `.\gradlew.bat :app:mergeOssDebugJavaResource --stacktrace` succeeds and creates `android/fork/app/build/intermediates/merged_java_res/ossDebug/mergeOssDebugJavaResource` while `android/fork/app/build/intermediates/merged_jni_libs/ossDebug/mergeOssDebugJniLibFolders` and APK outputs remain absent.
 CP-028 now redefined the next exact downstream continuation surface as the bounded `.\gradlew.bat :app:mergeOssDebugJniLibFolders --stacktrace` probe aligned with the previously still-absent `android/fork/app/build/intermediates/merged_jni_libs/ossDebug/mergeOssDebugJniLibFolders` output family. CP-028 execution then proved that surface succeeds and materializes that output family while broader downstream families remain absent.
 CP-029 now redefined the next exact downstream continuation surface as the bounded `.\gradlew.bat :app:mergeOssDebugNativeLibs --stacktrace` probe aligned with the previously still-absent `android/fork/app/build/intermediates/merged_native_libs/ossDebug/mergeOssDebugNativeLibs/out` output family. CP-029 execution then proved that surface succeeds and materializes that output family while broader downstream families remain absent.
-Continuity will degrade if future work skips CP-030 definition for the next still-unexecuted downstream surface and jumps directly into `stripOssDebugDebugSymbols`, signing, packaging, or `assemble*` work.
+CP-030 now defines the next exact downstream continuation surface as the bounded `.\gradlew.bat :app:stripOssDebugDebugSymbols --stacktrace` probe aligned with the still-absent `android/fork/app/build/intermediates/stripped_native_libs/ossDebug/stripOssDebugDebugSymbols/out` output family.
+Continuity will degrade if future work skips the still-absent `stripOssDebugDebugSymbols` surface and jumps directly into signing, packaging, or `assemble*` work.
 Version drift remains a risk at the tool-build layer because the isolated repaired `gomobile-matsuri` binary still rebuilt under `go1.24.0`, but the generated workspace itself no longer drifted to `go1.25.x`.
 The disposable CP-017, CP-018, and CP-019 validation workspaces were removed after evidence capture, so the default installed `gomobile-matsuri` path remains unchanged.
 The current local `android/sing-box` checkout is now intentionally persisted on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`; continuity will degrade if that local branch is changed without updating checkpoint artifacts.
 CP-018 intentionally proved the Kotlin compile consumer surface only; continuity will degrade if future work skips checkpoint definition for the next downstream surface and jumps into `assemble*`, packaging, or repair work first.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-030 is defined and approved under a bounded checkpoint, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-030 is executed and closed under a bounded checkpoint, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
