@@ -55,6 +55,7 @@ CP-033 now redefines that boundary to the observed APK output location `android/
 CP-033 execution then proved that the bounded `apksigner verify` probe succeeds for `android/fork/app/build/outputs/apk/oss/debug/NekoBox-1.4.2-x86_64-debug.apk`, while out-of-scope install/release/bundle/androidTest paths remain absent.
 CP-034 now defines the next smallest bounded continuation after successful APK verification as one install-verification probe, explicitly separated from launch/runtime continuation.
 CP-034 execution then reached the first exact meaningful outcome at prerequisite gating: no online adb targets were available (`online adb target count=0`), so the bounded install probe was not entered and CP-034 remains partial.
+CP-034 retry execution then revalidated the same prerequisite gate and remained blocked for the same reason (`online adb target count=0`), so the bounded install probe still was not entered.
 The next step is to re-execute CP-034 only after the exact adb prerequisite gate is satisfied.
 No server or Android implementation should begin outside an approved checkpoint.
 
@@ -197,6 +198,7 @@ CP-032 execution proved the bounded `.\gradlew.bat :app:packageOssDebug --stackt
 CP-033 execution then confirmed the corrected boundary and successful bounded APK verification via `apksigner`.
 CP-034 now bounds the next downstream step to single-probe install verification and separates it from launch/runtime continuation.
 CP-034 execution then proved adb-device availability is an active gate: with zero online targets, install verification cannot start and the checkpoint remains partial.
+CP-034 retry execution confirmed the same gate remains active in current environment: zero online targets still block install-verification entry.
 Continuity will degrade if future work skips CP-034 retry and jumps directly into launch, runtime debugging, or broad `assemble*` work.
 Version drift remains a risk at the tool-build layer because the isolated repaired `gomobile-matsuri` binary still rebuilt under `go1.24.0`, but the generated workspace itself no longer drifted to `go1.25.x`.
 The disposable CP-017, CP-018, and CP-019 validation workspaces were removed after evidence capture, so the default installed `gomobile-matsuri` path remains unchanged.

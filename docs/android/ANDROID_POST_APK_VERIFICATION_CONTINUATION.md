@@ -138,3 +138,33 @@ Completed:
 
 Remaining blocker:
 - no eligible adb device state (`exactly one online x86_64 target`) to enter the bounded install-verification probe.
+
+## Retry Attempt
+Retry timestamp:
+```text
+2026-04-22 19:55:46
+```
+
+Retry prerequisite summary remained unchanged:
+```text
+online adb target count=0
+online adb exactly one => False
+adb target abi is x86_64 => False
+```
+
+Retry action decision:
+- hard prerequisites still failed
+- bounded install probe was not entered
+- execution stopped immediately per CP-034 gate rules
+
+Retry evidence:
+- `docs/android/evidence/cp034_retry_prereq_checks.log`
+- `docs/android/evidence/cp034_retry_adb_devices.log`
+- `docs/android/evidence/cp034_retry_out_of_scope_path_checks.log`
+
+Retry out-of-scope verification:
+```text
+android/fork/app/build/outputs/apk/oss/release => False
+android/fork/app/build/outputs/bundle/ossDebug => False
+android/fork/app/build/outputs/apk/androidTest/oss/debug => False
+```
