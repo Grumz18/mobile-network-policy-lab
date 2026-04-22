@@ -159,3 +159,44 @@ Re-retry evidence files:
 - `docs/android/evidence/cp041_reretry_prereq_checks.log`
 - `docs/android/evidence/cp041_reretry_probe.log`
 - `docs/android/evidence/cp041_reretry_probe.clean.log`
+
+## Re-retry-2 Outcome (2026-04-23)
+CP-041 was re-retried-2 in bounded scope with explicit stabilization handling for repeated transient adb errors.
+
+Re-retry-2 corrected probe command (executed once):
+```powershell
+& "C:/Android/Sdk/platform-tools/adb.exe" -s emulator-5554 shell "dumpsys activity services | grep -m 1 -E 'ServiceRecord.*moe\.nb4a\.debug/'"
+```
+
+Re-retry-2 prerequisites remained satisfied:
+```text
+online adb target count=1
+online adb target serial=emulator-5554
+target abi=x86_64
+pm path moe.nb4a.debug => package:/data/app/~~5luga3s0QmDqGRYEv51_HA==/moe.nb4a.debug-yGFPWG-QoCmncva-7Hw5PQ==/base.apk
+pidof moe.nb4a.debug => 3551
+```
+
+Re-retry-2 probe transcript:
+```text
+  * ServiceRecord{a8a5dec u0 moe.nb4a.debug/androidx.room.MultiInstanceInvalidationService c:moe.nb4a.debug}
+adb.exe : Failed to write while dumping service activity: Broken pipe
+EXIT_CODE: 0
+```
+
+First exact meaningful outcome in re-retry-2:
+```text
+CP-041 re-retry-2 probe failed: adb.exe : Failed to write while dumping service activity: Broken pipe
+```
+
+Re-retry-2 result:
+- `partial`
+- `Broken pipe` treated as transient adb error per explicit stabilization rule
+- marked as `environment-limited for this session` because this is the third consecutive `Broken pipe` occurrence in CP-041 retry sequence
+- stop rule applied immediately after first exact transient adb error line (no in-run loop)
+
+Re-retry-2 evidence files:
+- `docs/android/evidence/cp041_reretry2_adb_devices.log`
+- `docs/android/evidence/cp041_reretry2_prereq_checks.log`
+- `docs/android/evidence/cp041_reretry2_probe.log`
+- `docs/android/evidence/cp041_reretry2_probe.clean.log`
