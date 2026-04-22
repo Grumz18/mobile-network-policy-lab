@@ -159,3 +159,27 @@ Re-retry evidence files:
 
 Re-retry outcome:
 - CP-040 remains blocked until exactly one online adb target is restored.
+
+## Re-retry-2 Outcome (2026-04-23)
+CP-040 was re-retried-2 with explicit device-recovery verification before any prerequisite re-evaluation.
+
+Re-retry-2 gate result:
+```text
+List of devices attached
+online adb target count=0
+FIRST_FAILURE=CP-040 re-retry-2 prerequisite failed: expected exactly one online adb target, got 0
+```
+
+Re-retry-2 scope behavior:
+- CP-040 stopped immediately at device-recovery gate
+- no prerequisite re-evaluation branch was entered
+- bounded resumed-task probe was not entered
+- no UI/network/runtime-debug actions were performed
+
+Re-retry-2 evidence files:
+- `docs/android/evidence/cp040_reretry2_adb_devices.log`
+- `docs/android/evidence/cp040_reretry2_prereq_checks.log` was not created because device gate did not pass
+- `docs/android/evidence/cp040_reretry2_probe.log` was not created because prerequisites were not entered
+
+Re-retry-2 outcome:
+- CP-040 remains blocked until exactly one online adb target is restored.
