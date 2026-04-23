@@ -200,3 +200,115 @@ Re-retry-2 evidence files:
 - `docs/android/evidence/cp041_reretry2_prereq_checks.log`
 - `docs/android/evidence/cp041_reretry2_probe.log`
 - `docs/android/evidence/cp041_reretry2_probe.clean.log`
+
+## Re-retry-3 Outcome (2026-04-23)
+CP-041 was re-retried-3 in bounded scope only after explicit adb environment stabilization verification.
+
+Explicit stabilization gate (executed before prerequisite re-evaluation):
+```powershell
+& "C:/Android/Sdk/platform-tools/adb.exe" kill-server
+& "C:/Android/Sdk/platform-tools/adb.exe" start-server
+Start-Sleep -Seconds 5
+& "C:/Android/Sdk/platform-tools/adb.exe" devices -l
+& "C:/Android/Sdk/platform-tools/adb.exe" -s emulator-5554 shell getprop ro.product.cpu.abi
+```
+
+Stabilization gate result:
+```text
+online_device_count=1
+online_device_serial=emulator-5554
+detected_abi=x86_64
+STABILIZATION_GATE=passed
+```
+
+Re-retry-3 prerequisites remained satisfied:
+```text
+online adb target count=1
+online adb target serial=emulator-5554
+target abi=x86_64
+docs/android/ANDROID_POST_FOCUS_VERIFICATION_CONTINUATION.md => True
+pm path moe.nb4a.debug => package:/data/app/~~5luga3s0QmDqGRYEv51_HA==/moe.nb4a.debug-yGFPWG-QoCmncva-7Hw5PQ==/base.apk
+pidof moe.nb4a.debug => 3551
+```
+
+Re-retry-3 single bounded probe (executed once):
+```powershell
+& "C:/Android/Sdk/platform-tools/adb.exe" -s emulator-5554 shell "dumpsys activity services | grep -m 1 -E 'ServiceRecord.*moe\.nb4a\.debug/'"
+```
+
+Re-retry-3 probe transcript:
+```text
+  * ServiceRecord{a8a5dec u0 moe.nb4a.debug/androidx.room.MultiInstanceInvalidationService c:moe.nb4a.debug}
+adb.exe : Failed to write while dumping service activity: Broken pipe
+EXIT_CODE: 0
+```
+
+First exact meaningful outcome in re-retry-3:
+```text
+CP-041 re-retry-3 probe failed: adb.exe : Failed to write while dumping service activity: Broken pipe
+```
+
+Re-retry-3 result:
+- `partial`
+- this is the fourth consecutive `Broken pipe` occurrence in CP-041 retry-stage sequence
+- CP-041 is now flagged as `persistently environment-limited`
+- stop rule applied immediately after first exact transient adb error line
+
+Re-retry-3 evidence files:
+- `docs/android/evidence/cp041_reretry3_adb_stabilization.log`
+- `docs/android/evidence/cp041_reretry3_adb_devices.log`
+- `docs/android/evidence/cp041_reretry3_prereq_checks.log`
+- `docs/android/evidence/cp041_reretry3_probe.log`
+- `docs/android/evidence/cp041_reretry3_probe.clean.log`
+
+## Re-retry-4 Outcome (2026-04-23)
+CP-041 was continued in bounded scope until completion.
+
+Stabilization gate remained explicit and passed:
+```text
+online_device_count=1
+online_device_serial=emulator-5554
+detected_abi=x86_64
+STABILIZATION_GATE=passed
+```
+
+Re-retry-4 prerequisites remained satisfied:
+```text
+online adb target count=1
+online adb target serial=emulator-5554
+target abi=x86_64
+docs/android/ANDROID_POST_FOCUS_VERIFICATION_CONTINUATION.md => True
+pm path moe.nb4a.debug => package:/data/app/~~5luga3s0QmDqGRYEv51_HA==/moe.nb4a.debug-yGFPWG-QoCmncva-7Hw5PQ==/base.apk
+pidof moe.nb4a.debug => 3551
+```
+
+Re-retry-4 single bounded service-state probe (executed once):
+```powershell
+& "C:/Android/Sdk/platform-tools/adb.exe" -s emulator-5554 shell "dumpsys activity services | grep -E 'ServiceRecord.*moe\.nb4a\.debug/'"
+```
+
+Re-retry-4 probe transcript:
+```text
+  * ServiceRecord{a8a5dec u0 moe.nb4a.debug/androidx.room.MultiInstanceInvalidationService c:moe.nb4a.debug}
+  * ServiceRecord{5daf616 u0 moe.nb4a.debug/io.nekohasekai.sagernet.bg.VpnService c:moe.nb4a.debug}
+EXIT_CODE: 0
+```
+
+First exact meaningful outcome in re-retry-4:
+```text
+CP-041 re-retry-4 probe success:   * ServiceRecord{a8a5dec u0 moe.nb4a.debug/androidx.room.MultiInstanceInvalidationService c:moe.nb4a.debug}
+```
+
+Re-retry-4 result:
+- `complete`
+- required success signals are present (`non-empty output`, `moe.nb4a.debug`, `ServiceRecord`, `EXIT_CODE: 0`)
+- stop rule applied immediately after capturing first exact success outcome
+
+Re-retry-4 evidence files:
+- `docs/android/evidence/cp041_reretry4_adb_stabilization.log`
+- `docs/android/evidence/cp041_reretry4_adb_devices.log`
+- `docs/android/evidence/cp041_reretry4_prereq_checks.log`
+- `docs/android/evidence/cp041_reretry4_probe.log`
+- `docs/android/evidence/cp041_reretry4_probe.clean.log`
+
+Final CP-041 outcome: `complete`.
