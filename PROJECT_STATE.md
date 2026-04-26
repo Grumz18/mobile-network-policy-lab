@@ -5,9 +5,9 @@ adaptive-mobile-network-lab
 
 ## CURRENT_PHASE
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, CP-021 post-compile-jar continuation checkpoint definition, CP-021 post-compile-jar continuation checkpoint execution, CP-022 post-runtime-jar continuation checkpoint definition, CP-022 post-runtime-jar continuation checkpoint execution, and CP-023 post-dex continuation checkpoint definition are complete.
-CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, CP-030 post-merged-native-libs continuation checkpoint definition and execution are complete, CP-031 post-stripped-native-libs continuation checkpoint definition and execution are complete, CP-032 post-validate-signing continuation checkpoint definition is complete while CP-032 execution is partial, CP-033 post-package-boundary-correction checkpoint definition and execution are complete, CP-034 post-APK-verification continuation checkpoint definition and execution are complete, CP-035 post-install-verification continuation checkpoint definition and execution are complete, CP-036 post-launch-process-verification checkpoint definition and execution are complete, CP-037 post-process-verification continuation checkpoint definition and execution are complete, CP-038 post-foreground-state continuation checkpoint definition is complete while CP-038 execution is partial, CP-039 post-focus-boundary-correction checkpoint definition and execution are complete, CP-040 post-focus-verification continuation checkpoint definition and execution are complete, CP-041 post-resumed-task service-state continuation checkpoint definition and execution are complete, and CP-042 post-service interface-state continuation checkpoint definition is complete while execution is pending.
+CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, CP-030 post-merged-native-libs continuation checkpoint definition and execution are complete, CP-031 post-stripped-native-libs continuation checkpoint definition and execution are complete, CP-032 post-validate-signing continuation checkpoint definition is complete while CP-032 execution is partial, CP-033 post-package-boundary-correction checkpoint definition and execution are complete, CP-034 post-APK-verification continuation checkpoint definition and execution are complete, CP-035 post-install-verification continuation checkpoint definition and execution are complete, CP-036 post-launch-process-verification checkpoint definition and execution are complete, CP-037 post-process-verification continuation checkpoint definition and execution are complete, CP-038 post-foreground-state continuation checkpoint definition is complete while CP-038 execution is partial, CP-039 post-focus-boundary-correction checkpoint definition and execution are complete, CP-040 post-focus-verification continuation checkpoint definition and execution are complete, CP-041 post-resumed-task service-state continuation checkpoint definition and execution are complete, and CP-042 post-service interface-state continuation checkpoint definition is complete while execution is partial.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to execute CP-042 only in bounded scope.
+The next eligible work is to retry CP-042 only in bounded scope.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -94,6 +94,9 @@ CP-041 execution is now complete.
 CP-042 is now authored as a definition-only checkpoint for the next bounded post-service surface:
 - bounded tunnel-interface presence verification via `ip link show | grep -E 'tun|tap'`
 - execution remains pending by design
+CP-042 execution then revalidated prerequisites and stopped at first exact prerequisite failure before probe entry:
+- `CP-042 prerequisite failed: expected exactly one online adb target, found 0`
+CP-042 remains partial pending a bounded retry after exactly one online adb target with ABI `x86_64` is restored.
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -206,6 +209,8 @@ No server or Android implementation should begin outside an approved checkpoint.
 - CP-041 re-retry-3 evidence logs (`cp041_reretry3_adb_stabilization.log`, `cp041_reretry3_adb_devices.log`, `cp041_reretry3_prereq_checks.log`, `cp041_reretry3_probe.log`, `cp041_reretry3_probe.clean.log`)
 - CP-041 re-retry-4 evidence logs (`cp041_reretry4_adb_stabilization.log`, `cp041_reretry4_adb_devices.log`, `cp041_reretry4_prereq_checks.log`, `cp041_reretry4_probe.log`, `cp041_reretry4_probe.clean.log`)
 - CP-042 post-service interface-state continuation checkpoint definition (`checkpoints/CP-042.md`)
+- CP-042 execution artifact (`docs/android/ANDROID_POST_SERVICE_INTERFACE_VERIFICATION.md`)
+- CP-042 execution evidence logs (`cp042_adb_devices.log`, `cp042_prereq_checks.log`)
 - CP-040 retry evidence logs (`cp040_retry_adb_devices.log`, `cp040_retry_prereq_checks.log`, `cp040_retry_probe.log`)
 - CP-040 re-retry device-gate evidence log (`cp040_reretry_adb_devices.log`)
 - CP-040 re-retry-2 device-gate evidence log (`cp040_reretry2_adb_devices.log`)
@@ -219,14 +224,14 @@ No server or Android implementation should begin outside an approved checkpoint.
 ## WHAT_DOES_NOT_EXIST_YET
 - Local patches against fork content (requires a post-build-verification checkpoint)
 - A persisted default-environment repair for the libcore gomobile path
-- CP-042 execution artifact (`docs/android/ANDROID_POST_SERVICE_INTERFACE_VERIFICATION.md`)
+- Successful CP-042 interface-state verification evidence (`tun|tap` with `UP` and `EXIT_CODE: 0`)
 
 ## EXECUTION_RULE
 From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Execute CP-042 only: run prerequisite gate, execute one bounded interface-state probe, capture first exact meaningful outcome, and stop.
+Retry CP-042 only: re-run prerequisite gate, restore exactly one online adb target with ABI `x86_64`, execute one bounded interface-state probe, capture first exact meaningful outcome, and stop.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
@@ -267,7 +272,7 @@ CP-036 now bounds the immediate post-launch surface to one process-alive probe o
 CP-036 execution is now complete with required process-alive success signals captured in bounded scope.
 CP-037 now bounds the immediate post-process surface to one foreground-state verification probe only.
 CP-037 execution is now complete with required foreground-state success signals captured in bounded scope.
-Continuity will degrade if future work skips CP-042 execution and jumps directly into UI interaction, runtime debugging, network actions, or broad `assemble*` work.
+Continuity will degrade if future work skips CP-042 retry discipline and jumps directly into UI interaction, runtime debugging, network actions, or broad `assemble*` work.
 CP-038 execution proved that the authored `dumpsys window windows | grep -m 1 -E 'mCurrentFocus|mFocusedApp'` probe did not return deterministic focus-state success signals on this emulator session (`EXIT_CODE: 1`) even while process and foreground continuity remained healthy.
 CP-039 execution proved that the bounded replacement probe `dumpsys window | grep -m 1 -E 'mCurrentFocus|mFocusedApp'` returns deterministic focus-state success signals (`mCurrentFocus` with package/activity and `EXIT_CODE: 0`) in this environment.
 CP-040 execution is now complete with bounded resumed-task verification success captured under recovered device state.
@@ -276,7 +281,7 @@ The disposable CP-017, CP-018, and CP-019 validation workspaces were removed aft
 The current local `android/sing-box` checkout is now intentionally persisted on branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`; continuity will degrade if that local branch is changed without updating checkpoint artifacts.
 CP-018 intentionally proved the Kotlin compile consumer surface only; continuity will degrade if future work skips checkpoint definition for the next downstream surface and jumps into `assemble*`, packaging, or repair work first.
 `JAVA_HOME` and `ANDROID_HOME` are not persisted to the system environment and must be set per-session.
-If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-042 is executed in bounded scope, continuity and checkpoint discipline will degrade.
+If future work starts Android product implementation, per-app routing, transport logic, or broad build repair before CP-042 is completed in bounded scope, continuity and checkpoint discipline will degrade.
 
 ## OWNER_DECISION_LOG
 - The project is personal, research-oriented, and not aimed at app store deployment first.
