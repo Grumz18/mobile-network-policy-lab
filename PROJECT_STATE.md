@@ -7,7 +7,7 @@ adaptive-mobile-network-lab
 Repository bootstrap, governance anchoring, repository execution-surface bootstrap, server baseline definition, Android fork baseline definition, Android local build baseline definition, Android fork intake and patch workflow baseline, upstream fork snapshot materialization, initial Android build verification, Android build-prerequisite bootstrap, the first Android build attempt, libcore gomobile blocker diagnosis, CP-012 repair-checkpoint definition, CP-012 isolated repair validation, CP-013 diagnosis-checkpoint definition, CP-013 blocker diagnosis execution, CP-014 metadata-bridge repair-checkpoint definition, CP-014 metadata-bridge repair execution, CP-015 post-metadata dependency-blocker checkpoint definition, CP-015 post-metadata dependency-blocker execution, CP-016 sing-box alignment-test checkpoint definition, CP-016 sing-box alignment-test execution, CP-017 sing-box baseline-persistence checkpoint definition, CP-017 sing-box baseline-persistence execution, CP-018 post-libcore continuation checkpoint definition, CP-018 post-libcore continuation checkpoint execution, CP-019 post-kotlin continuation checkpoint definition, CP-019 post-kotlin continuation checkpoint execution, CP-020 post-javac continuation checkpoint definition, CP-020 post-javac continuation checkpoint execution, CP-021 post-compile-jar continuation checkpoint definition, CP-021 post-compile-jar continuation checkpoint execution, CP-022 post-runtime-jar continuation checkpoint definition, CP-022 post-runtime-jar continuation checkpoint execution, and CP-023 post-dex continuation checkpoint definition are complete.
 CP-023 post-dex continuation checkpoint execution is partial, CP-024 post-merge-project-dex continuation checkpoint definition and execution are complete, CP-025 post-merge-ext-dex continuation checkpoint definition and execution are complete, CP-026 post-merge-lib-dex continuation checkpoint definition and execution are complete, CP-027 post-process-java-res continuation checkpoint definition and execution are complete, CP-028 post-merged-java-res continuation checkpoint definition and execution are complete, CP-029 post-merged-jni-libs continuation checkpoint definition and execution are complete, CP-030 post-merged-native-libs continuation checkpoint definition and execution are complete, CP-031 post-stripped-native-libs continuation checkpoint definition and execution are complete, CP-032 post-validate-signing continuation checkpoint definition is complete while CP-032 execution is partial, CP-033 post-package-boundary-correction checkpoint definition and execution are complete, CP-034 post-APK-verification continuation checkpoint definition and execution are complete, CP-035 post-install-verification continuation checkpoint definition and execution are complete, CP-036 post-launch-process-verification checkpoint definition and execution are complete, CP-037 post-process-verification continuation checkpoint definition and execution are complete, CP-038 post-foreground-state continuation checkpoint definition is complete while CP-038 execution is partial, CP-039 post-focus-boundary-correction checkpoint definition and execution are complete, CP-040 post-focus-verification continuation checkpoint definition and execution are complete, CP-041 post-resumed-task service-state continuation checkpoint definition and execution are complete, CP-042 post-service interface-state continuation checkpoint definition is complete while retry execution is blocked, CP-043 persistence-with-reporting continuation checkpoint definition is complete while retry execution remains blocked (environment-limited) at explicit stabilization gate, CP-044 adb-environment recovery preconditions checkpoint definition and execution are complete, and CP-045 post-host-recovery interface re-entry checkpoint definition is complete while execution is partial.
 The repository is operating under a checkpoint-driven workflow with documented local, server, and Android bootstrap guidance.
-The next eligible work is to retry CP-045 only in bounded scope, because CP-045 execution reached probe-stage failure (`request send failed: Permission denied`) before required interface success signals were captured.
+The next eligible work is to retry CP-045 only in bounded scope after owner-side transport stabilization, because CP-045 retry still ended with probe-stage permission failure and `transport-error-persistent: true`.
 
 ## CONFIRMED_FOUNDATIONS
 The repository exists and is pushed.
@@ -129,6 +129,11 @@ CP-045 execution then verified prerequisites and executed the single bounded pro
 - `request send failed: Permission denied`
 - `EXIT_CODE: 1`
 - CP-045 result: `partial`
+CP-045 retry then executed explicit transport stabilization gate first (`adb kill-server`, wait 2s, `adb start-server`, `wait-for-device` boot check), revalidated prerequisites, and still stopped at first exact probe transport error:
+- `request send failed: Permission denied`
+- `EXIT_CODE: 1`
+- CP-045 retry result: `partial`
+- explicit retry flag: `transport-error-persistent: true`
 No server or Android implementation should begin outside an approved checkpoint.
 
 ## WHAT_EXISTS_NOW
@@ -256,6 +261,7 @@ No server or Android implementation should begin outside an approved checkpoint.
 - CP-045 post-host-recovery interface re-entry checkpoint definition (`checkpoints/CP-045.md`)
 - CP-045 execution artifact (`docs/android/ANDROID_POST_HOST_RECOVERY_INTERFACE_REENTRY.md`)
 - CP-045 execution evidence logs (`cp045_prereq_checks.log`, `cp045_adb_devices.log`, `cp045_probe.log`, `cp045_probe.clean.log`, `cp045_fallback_package.log`, `cp045_fallback_process.log`, `cp045_fallback_service.log`)
+- CP-045 retry evidence logs (`cp045_retry_stabilization.log`, `cp045_retry_adb_devices.log`, `cp045_retry_prereq_checks.log`, `cp045_retry_probe.log`, `cp045_retry_probe.clean.log`, `cp045_retry_fallback_package.log`, `cp045_retry_fallback_process.log`, `cp045_retry_fallback_service.log`)
 - CP-040 retry evidence logs (`cp040_retry_adb_devices.log`, `cp040_retry_prereq_checks.log`, `cp040_retry_probe.log`)
 - CP-040 re-retry device-gate evidence log (`cp040_reretry_adb_devices.log`)
 - CP-040 re-retry-2 device-gate evidence log (`cp040_reretry2_adb_devices.log`)
@@ -278,7 +284,7 @@ From this point forward, all work must begin from a checkpoint file.
 Each checkpoint must be small, bounded, and end with an updated handoff section.
 
 ## NEXT_REQUIRED_ACTION
-Retry CP-045 only in bounded scope, preserving single-probe discipline and capturing first exact outcome if adb transport failure persists.
+Retry CP-045 only in bounded scope after owner-side transport/permission stabilization, preserving single-probe discipline and first-outcome stop rule.
 
 ## RISK_NOTES
 The main risk at this stage is scope drift from bounded blocker repair into unbounded build experimentation or implementation.
