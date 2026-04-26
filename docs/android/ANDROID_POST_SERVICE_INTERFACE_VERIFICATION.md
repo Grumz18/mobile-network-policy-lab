@@ -1,11 +1,12 @@
 # Android Post-Service Interface Verification
 
 ## Purpose
-This document records CP-042 execution of only the bounded post-service tunnel-interface presence verification surface.
+This document records CP-042 retry execution of only the bounded post-service tunnel-interface presence verification surface.
 
 Scope remained strict:
-- prerequisite verification only
-- one bounded interface-state probe allowed only after prerequisites pass
+- explicit adb device-recovery gate first
+- prerequisite verification only if recovery gate passes
+- one bounded interface-state probe allowed only if all prerequisites pass
 - first exact meaningful outcome capture and immediate stop
 
 Out-of-scope actions remained unperformed:
@@ -22,18 +23,17 @@ CP-042
 ## Date
 2026-04-27
 
-## Exact Prerequisite Verification
+## Explicit Device-Recovery Gate
 ```text
-android/sing-box branch=cp017-local-baseline
-android/sing-box commit=aed32ee3066cdbc7d471e3e0415c5134088962df
-docs/android/ANDROID_POST_RESUMED_TASK_SERVICE_VERIFICATION.md => True
-cp041 artifact contains VpnService => True
-android/fork/app/build/outputs/apk/oss/debug/output-metadata.json => True
-output-metadata applicationId=moe.nb4a.debug
 adb resolved path=C:\Android\Sdk\platform-tools\adb.exe
 online adb target count=0
-FIRST_FAILED_PREREQUISITE=expected exactly one online adb target, found 0
-PREREQUISITES=failed
+DEVICE_GATE=failed
+FIRST_FAILED_GATE_LINE=expected exactly one online adb target with state device, found 0
+```
+
+## Exact Prerequisite Verification
+```text
+NOT_EXECUTED (device-recovery gate failed)
 ```
 
 ## Single Bounded Probe
@@ -43,26 +43,26 @@ adb shell "ip link show | grep -E 'tun|tap'"
 
 Probe execution:
 ```text
-NOT_EXECUTED (stopped at first failed prerequisite)
+NOT_EXECUTED (stopped at failed device-recovery gate)
 ```
 
 ## First Exact Meaningful Outcome
 ```text
-CP-042 prerequisite failed: expected exactly one online adb target, found 0
+CP-042 retry blocked: expected exactly one online adb target with state device, found 0
 ```
 
 ## Success Signal Evaluation
-Expected interface-state success signals were not evaluated because probe entry was not reached:
+Expected interface-state success signals were not evaluated because device recovery gate did not pass:
 - non-empty `tun|tap` interface line: not evaluated
 - `UP` lifecycle indicator: not evaluated
 - `EXIT_CODE: 0`: not evaluated
 
 ## Fallback Evidence Sources
 Captured in this run:
-- `docs/android/evidence/cp042_adb_devices.log`
-- `docs/android/evidence/cp042_prereq_checks.log`
+- `docs/android/evidence/cp042_retry_adb_devices.log`
 
 Not captured in this run because probe was never entered:
+- retry prerequisite transcript (`cp042_retry_prereq_checks.log`)
 - direct probe transcript
 - clean probe transcript
 - fallback `pidof`
@@ -77,11 +77,11 @@ Not captured in this run because probe was never entered:
 - no out-of-scope UI/network/runtime-debugging/feature work performed
 
 ## Outcome
-CP-042 execution result: `partial`.
+CP-042 retry result: `blocked`.
 
 Completed:
-- prerequisites verified and logged
-- first exact prerequisite failure outcome captured and stop rule applied before probe entry
+- explicit adb device-recovery gate executed and logged
+- first exact gate failure outcome captured and stop rule applied before prerequisite re-evaluation
 
 Remaining:
-- re-run CP-042 bounded flow after restoring exactly one online adb target with ABI `x86_64`, then execute the single bounded probe once and stop at first outcome.
+- restore exactly one online adb target with state `device` and ABI `x86_64`, then retry CP-042 only in the same bounded scope.
