@@ -1,107 +1,108 @@
 # Android Persistence With Reporting Rule
 
 ## Purpose
-This document records CP-043 execution of the bounded persistence-with-reporting rule validation surface only.
+This document records the CP-043 retry execution in bounded scope using the persistence-with-reporting rule, without expanding into unrelated debugging or implementation work.
 
 Scope remained strict:
-- prerequisite verification before rule application
-- bounded recovery action set only (`adb kill-server`, `adb start-server`, wait 5s, re-verify prerequisites)
-- one bounded validation probe retry per recovery cycle
-- maximum 5 cycles
+- explicit adb stabilization gate before any cycle
+- bounded recovery action set only (`adb kill-server`, `adb start-server`, wait 5s)
+- single bounded validation probe (`adb devices -l`)
 - no UI interaction, network actions, runtime debugging, or feature implementation
 
 ## Checkpoint
-CP-043
+CP-043 (retry)
 
 ## Date
 2026-04-27
 
-## Prerequisite Verification Before Rule Application
+## Pre-Rule Prerequisites
 Static prerequisites passed:
 - `docs/android/ANDROID_POST_SERVICE_INTERFACE_VERIFICATION.md` exists
-- `PROJECT_STATE.md` reflected CP-043 definition as complete/pending execution at run start
-- `android/sing-box` branch `cp017-local-baseline` at `aed32ee3066cdbc7d471e3e0415c5134088962df`
-- adb path resolved: `C:\Android\Sdk\platform-tools\adb.exe`
+- `PROJECT_STATE.md` includes CP-043 definition-complete signal
+- `android/sing-box` branch `cp017-local-baseline`
+- `android/sing-box` commit `aed32ee3066cdbc7d471e3e0415c5134088962df`
+- adb path resolved: `C:\\Android\\Sdk\\platform-tools\\adb.exe`
 
-Dynamic device prerequisite did not pass in any cycle:
-- expected exactly one online adb target with ABI `x86_64`
-- observed `0` online adb targets
+## Explicit Stabilization Gate
+Gate actions executed:
+1. `adb kill-server`
+2. `adb start-server`
+3. wait 5 seconds
+4. verify `adb devices -l` device-state conditions
 
-## Bounded Validation Probe
-Selected bounded validation probe:
+Gate validation required:
+- exactly one online target with `device` state
+- target ABI `x86_64`
+- serial `emulator-5554` or explicitly captured valid alternative
+
+Gate result:
+- `FAIL`
+- exact failure line:
+  - `expected exactly one online target with device state, found 0`
+
+Because stabilization gate failed, CP-043 retry stopped before rule-validation cycle entry.
+
+## Validation Probe Definition
+Bounded validation probe remained:
 ```powershell
 adb devices -l
 ```
 
-Probe success signals for this validation:
-- command output includes exactly one target with state `device`
-- target ABI resolves to `x86_64`
+Expected success signals:
+- output non-empty
+- exactly one non-header line with `device` state
+- serial `emulator-5554` or explicitly captured valid alternative
 - `EXIT_CODE: 0`
 
-## Persistence Cycles Executed
-Cycle count executed: `5` (maximum allowed).
+## Cycle Execution Status
+Rule-validation cycles were not entered due stabilization-gate failure.
 
-Per-cycle first exact outcome:
-1. `expected exactly one online adb target with state device, found 0`
-2. `expected exactly one online adb target with state device, found 0`
-3. `expected exactly one online adb target with state device, found 0`
-4. `expected exactly one online adb target with state device, found 0`
-5. `expected exactly one online adb target with state device, found 0`
+Cycle evidence files were captured as non-executed records:
+- `docs/android/evidence/cp043_retry_cycle_1_adb_devices.log`
+- `docs/android/evidence/cp043_retry_cycle_1_probe.log`
+- `docs/android/evidence/cp043_retry_cycle_2_adb_devices.log`
+- `docs/android/evidence/cp043_retry_cycle_2_probe.log`
+- `docs/android/evidence/cp043_retry_cycle_3_adb_devices.log`
+- `docs/android/evidence/cp043_retry_cycle_3_probe.log`
+- `docs/android/evidence/cp043_retry_cycle_4_adb_devices.log`
+- `docs/android/evidence/cp043_retry_cycle_4_probe.log`
+- `docs/android/evidence/cp043_retry_cycle_5_adb_devices.log`
+- `docs/android/evidence/cp043_retry_cycle_5_probe.log`
 
-First exact meaningful outcome captured:
-`expected exactly one online adb target with state device, found 0`
-
-## Recovery Actions
-Applied each cycle (bounded set only):
-- `adb kill-server`
-- `adb start-server`
-- wait `5` seconds
-- re-verify prerequisites on next cycle
-
-Recovery action transcript:
-- `docs/android/evidence/cp043_recovery_actions.log`
-
-## Evidence
-Per-cycle evidence logs:
-- `docs/android/evidence/cp043_cycle_1_adb_devices.log`
-- `docs/android/evidence/cp043_cycle_1_probe.log`
-- `docs/android/evidence/cp043_cycle_2_adb_devices.log`
-- `docs/android/evidence/cp043_cycle_2_probe.log`
-- `docs/android/evidence/cp043_cycle_3_adb_devices.log`
-- `docs/android/evidence/cp043_cycle_3_probe.log`
-- `docs/android/evidence/cp043_cycle_4_adb_devices.log`
-- `docs/android/evidence/cp043_cycle_4_probe.log`
-- `docs/android/evidence/cp043_cycle_5_adb_devices.log`
-- `docs/android/evidence/cp043_cycle_5_probe.log`
+## Fallback Evidence
+- stabilization gate transcript:
+  - `docs/android/evidence/cp043_retry_stabilization_gate.log`
+- retry recovery transcript:
+  - `docs/android/evidence/cp043_retry_recovery_actions.log`
 
 ## Outcome
-CP-043 execution result: `blocked`.
+CP-043 retry result: `blocked`.
 
 Explicit environment-limited flag: `true`.
 
-Reason:
-- all 5 bounded recovery cycles were exhausted without reaching device-continuity success signals.
+First exact meaningful outcome:
+- `expected exactly one online target with device state, found 0`
 
 ## Completion Narrative
 Recovery actions taken:
-- bounded recovery actions were applied in every cycle: `adb kill-server`, `adb start-server`, wait 5s, then prerequisite re-verification.
+- stabilization gate executed bounded recovery actions (`adb kill-server`, `adb start-server`, wait 5s).
 
 Cycle achieving success:
-- none; all 5 cycles exhausted without success.
+- none; stabilization gate failed before cycle entry.
 
 Exact final probe output that satisfied success signals:
-- no satisfying output was produced in this run.
-- final probe output (`cycle 5`):
+- none in this retry run; success signals were not reached.
+- last observed gate probe output:
   - `List of devices attached`
   - `<no device rows>`
   - `EXIT_CODE: 0`
 
 Assumptions or environmental conditions:
-- adb daemon restart was functional, but no emulator/device target became available during bounded cycles.
-- no additional environment-debugging actions were performed beyond the defined recovery actions.
+- adb daemon restart was successful, but no online adb target became available.
+- no environment debugging beyond defined bounded recovery actions was performed.
 
 ## Cleanup And Boundary Confirmation
-- retained all cycle evidence under `docs/android/evidence/`
-- no scratch files were created outside evidence directory
-- upstream source trees and baseline branches were not modified
+- retained all retry evidence under `docs/android/evidence/`
+- no temporary scratch files were created outside evidence directory
+- upstream source trees and baseline branches remained unchanged
 - no out-of-scope UI/network/runtime-debugging/feature actions were performed
